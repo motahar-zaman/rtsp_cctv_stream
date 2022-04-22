@@ -2,7 +2,7 @@ import cv2
 from flask import Flask, render_template, Response
 rtsp_url = "rtsp://wowzaec2demo.streamlock.net/vod/mp4:BigBuckBunny_115k.mp4"
 app = Flask(__name__)
-capture = cv2.VideoCapture(0)
+capture = cv2.VideoCapture(rtsp_url)
 
 
 def gen_frames():
@@ -22,10 +22,15 @@ def index():
     return render_template('index.html')
 
 
+@app.route('/camera_feed')
+def camera_feed():
+    return render_template('camera_stream.html')
+
+
 @app.route('/video_feed')
 def video_feed():
     return Response(gen_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=False)
